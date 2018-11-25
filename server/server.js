@@ -22,8 +22,9 @@ app.use(bodyParser.json());
 //CRUD operation; use post HTTP to send the resource - "create" -
 //in the json format which server, once it receives the text property
 //will create a new model and send the complete model with the id, completed property, completed app back to the client.
+//http endpoint for todo rest api
 app.post('/todos',(req, res)=>{
-  //create an instance of mongoose model
+  //grab the resource from /todo and create an instance of mongoose model
   var todo = new Todo({
     text: req.body.text
   });
@@ -31,7 +32,7 @@ app.post('/todos',(req, res)=>{
   //promise if else
   //actually save the data to database
   todo.save().then((doc)=>{
-    //callback for the success case; send doc back
+    //callback for the success case; send doc back with id, etc.
     res.send(doc);
   },(e)=>{
     //httpstatuses.com for list of http statuses
