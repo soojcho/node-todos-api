@@ -1,6 +1,7 @@
 //library modules/imports
 var express = require('express');
 var bodyParser = require('body-parser');
+var {ObjectID} = require('mongodb');
 
 //local modules/imports
 //call properties/objects defined in other files for server
@@ -37,6 +38,31 @@ app.post('/todos',(req, res)=>{
   },(e)=>{
     //httpstatuses.com for list of http statuses
     res.status(400).send(e);
+  });
+});
+
+app.get('/todos',(req,res)=>{
+  Todo.find().then((todos)=>{
+    res.send({todos});
+  },(e)=>{
+    res.status(400).send(e);
+  })
+});
+
+//fetch a variable passed from url
+//create a "id" variable
+app.get('/todos/:id', (req, res) => {
+  var id = req.params.id; //why is it from req that params object is called off of? because it's defined in the given url
+  if(!ObjectID.isValid(id)){ //how does it know whether id is valid or not? baked into ObjectID from mongodb module probably.
+    return res.status(404).send();//prevent function execution
+  }
+  Todo.findById(id).then((todo)=>{ //findbyId is from mongoose 3rd party module
+    if(!todo){
+      return res.status(404).send();
+    }
+    res.send({todo});
+  }).catch((e)=>{
+    res.status(400).send();
   });
 });
 
