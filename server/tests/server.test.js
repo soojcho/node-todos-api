@@ -69,7 +69,7 @@ describe('GET /todos/:id',()=>{
       .get(`/todos/${todos[0]._id.toHexString()}`) //use the id of the first todo
       .expect(200)//assertions when this request gets fired
       .expect((res)=>{
-        expect(res.body.todo.text).toBe(todos[0].text); //make sure text property we get equals text property we send
+        expect(res.body.todos.text).toBe(todos[0].text); //make sure text property we get equals text property we send
       })
       .end(done);
   });
