@@ -67,6 +67,22 @@ app.get('/todos/:id', (req, res) => {
   });
 });
 
+app.delete('/todos/:id',(req,res)=>{
+  var id = req.params.id;
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  Todo.findByIdAndRemove(id).then((todo)=>{
+    if(!todo){
+      return res.status(404).send();
+    }
+    res.send({todo});
+  }).catch((e)=>{
+    res.status(400).send();
+  });
+});
+
 //for now a local port '3000' to conenct to server, with a callback log text to respond with when app is up; eventually will deploy to heroku
 app.listen(port,()=>{
   console.log(`started on port: ${port}`);
