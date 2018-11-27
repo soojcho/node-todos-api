@@ -13,6 +13,7 @@ var {User} = require('./models/user');
 var {Todo} = require('./models/todo');
 
 var app = express();
+const port = process.env.PORT || 3000;
 
 //access third-party middleware json method from the library body-parser for sending json to server
 //this allows us to access "body" of req in post
@@ -67,8 +68,8 @@ app.get('/todos/:id', (req, res) => {
 });
 
 //for now a local port '3000' to conenct to server, with a callback log text to respond with when app is up; eventually will deploy to heroku
-app.listen(3000,()=>{
-  console.log('started on port 3000');
+app.listen(port,()=>{
+  console.log(`tarted on port: ${port}`);
 });
 
 module.exports = {app};
