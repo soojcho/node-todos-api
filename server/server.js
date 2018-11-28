@@ -1,7 +1,8 @@
 //library modules/imports
-var express = require('express');
-var bodyParser = require('body-parser');
-var {ObjectID} = require('mongodb');
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
 
 //local modules/imports
 //call properties/objects defined in other files for server
@@ -46,7 +47,7 @@ app.get('/todos',(req,res)=>{
   Todo.find().then((todos)=>{
     res.send({todos});
   },(e)=>{
-    res.status(400).send(e);
+    res.status(400).send(e); //how is this different from catch(e)?
   })
 });
 
@@ -80,6 +81,32 @@ app.delete('/todos/:id',(req,res)=>{
   }).catch((e)=>{
     res.status(400).send();
   });
+});
+
+app.patch('/todos/:id',(req,res)=>{
+  var id = req.params.id;
+  var body = _.pick(req.body, ['text', 'completed']); //only update if text property exists in the body and also for completed, not other properties like ids, etc specified in mongoose model
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  if(_.isBoolean(body.completed) && body.completed){
+    body.completedAt = new Date().getTime();
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+
+  Todo.findByIdAndUpdate(id,{$set: body}, {new: true}).then((todo)=>{
+    if(!todo){
+      return res.status(404).send();
+    }
+
+    res.send({todo});
+  }).catch((e)=>{
+    res.status(400).send();
+  })
 });
 
 //for now a local port '3000' to conenct to server, with a callback log text to respond with when app is up; eventually will deploy to heroku
