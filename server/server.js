@@ -1,3 +1,5 @@
+require('./config/config');
+
 //library modules/imports
 const _ = require('lodash');
 const express = require('express');
@@ -14,7 +16,7 @@ var {User} = require('./models/user');
 var {Todo} = require('./models/todo');
 
 var app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 //access third-party middleware json method from the library body-parser for sending json to server
 //this allows us to access "body" of req in post
